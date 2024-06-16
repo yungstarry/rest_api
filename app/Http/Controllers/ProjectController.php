@@ -19,6 +19,7 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = QueryBuilder::for(Project::class)
+            ->allowedIncludes('tasks')
             ->defaultSort('-created_at')
             ->allowedSorts(['title', 'created_at'])
             ->paginate(4);
@@ -51,7 +52,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return new ProjectResource($project);
+        return (new ProjectResource($project))->load('tasks');
     }
 
     /**
@@ -69,7 +70,7 @@ class ProjectController extends Controller
     {
         $data = $request->validated();
 
-        $project->update($data) ;
+        $project->update($data);
 
         return new ProjectResource($project);
     }
@@ -79,6 +80,8 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $project->delete();
+
+        return response()->noContent();
     }
 }

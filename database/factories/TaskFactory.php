@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +21,8 @@ class TaskFactory extends Factory
         return [
             'title' => $this->faker->sentence(),
             'is_done' => false,
-            'user_id' => User::factory()
+            'user_id' => User::factory(),
+            'project_id' => Project::factory()
         ];
     }
 }

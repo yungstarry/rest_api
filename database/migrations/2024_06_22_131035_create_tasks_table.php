@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->boolean('is_done')->default(false);
-            $table->foreignIdFor(User::class, 'user_id')->constrained('users');
+            $table->foreignIdFor(User::class, 'user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignIdFor(Project::class, 'project_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }
