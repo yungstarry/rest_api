@@ -7,6 +7,8 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TaskController extends Controller
 {
@@ -15,7 +17,13 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        return TaskResource::collection(Task::paginate(5));
+        $tasks = QueryBuilder::for(Task::class)
+            ->allowedFilters('is_done')
+            ->defaultSort('-created_at')
+            ->allowedSorts(['title', 'is_done', 'created_at'])
+            ->paginate();
+
+        return TaskResource::collection($tasks);
     }
 
     /**
@@ -30,10 +38,12 @@ class TaskController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreTaskRequest $request)
+
     {
+        $user = $request->user();
         $data =  $request->validated();
 
-        $task = Task::create($data);
+        $task = $user->tasks()->create($data);
 
         return new TaskResource($task);
     }
@@ -60,7 +70,7 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, Task $task)
     {
         $validated = $request->validated();
-        
+
         $task->update($validated);
 
         return new TaskResource($task);

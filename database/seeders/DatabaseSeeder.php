@@ -16,11 +16,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+      $user=  User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'wc@yahoo.com',
+            'password' => '123456'
+        ]);
 
-        Task::factory(50)->create();
+        // create 20 jobs with 1 user
+        Task::factory()->count(20)->create([
+            'user_id' => $user->id
+        ]);
     }
 }
