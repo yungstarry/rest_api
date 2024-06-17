@@ -17,18 +17,16 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-      $user=  User::factory()->create([
+        $user =  User::factory()->create([
             'name' => 'Test User',
             'email' => 'wc@yahoo.com',
             'password' => '123456'
         ]);
+        // Create 2 projects for the user
+        Project::factory()->count(2)->create(
+            ['user_id' => $user->id,]
+        );
 
-        // Create 20 projects for the user, each with one unique task
-        Project::factory()->count(20)->create()->each(function ($project) use ($user) {
-            Task::factory()->create([
-                'user_id' => $user->id,
-                'project_id' => $project->id,
-            ]);
-        });
+        
     }
 }

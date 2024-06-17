@@ -21,8 +21,8 @@ class TaskFactory extends Factory
         return [
             'title' => $this->faker->sentence(),
             'is_done' => false,
-            'user_id' => User::factory(),
-            'project_id' => Project::factory()
+            'user_id' => User::factory()->create()->id,
+            'project_id' => Project::factory()->create(['user_id' => User::factory()->create()->id])->id
         ];
     }
 }
